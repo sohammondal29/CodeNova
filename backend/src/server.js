@@ -35,14 +35,18 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(clerkMiddleware());
 
-app.use("/api/inngest", serve({ client: inngest, functions }));
-app.use("/api/chat", chatRoutes);
-app.use("/api/sessions", sessionRoutes);
-app.use("/api/code", codeRoutes);
+app.get("/", (req, res) => {
+  res.status(200).send("CodeNova backend is running");
+});
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "API is up and running" });
 });
+
+app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/chat", chatRoutes);
+app.use("/api/sessions", sessionRoutes);
+app.use("/api/code", codeRoutes);
 
 const httpServer = createServer(app);
 
