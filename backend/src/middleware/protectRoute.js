@@ -3,10 +3,9 @@ import User from "../models/User.js";
 
 export const protectRoute = [
   requireAuth(),
-
   async (req, res, next) => {
     try {
-      const clerkId = req.auth().userId;
+      const clerkId = req.auth?.userId;
 
       if (!clerkId) {
         return res.status(401).json({
@@ -14,37 +13,26 @@ export const protectRoute = [
         });
       }
 
-      // FIND USER IN DB
       let user = await User.findOne({ clerkId });
 
-      // AUTO CREATE USER IF NOT FOUND
       if (!user) {
         const clerkUser = await clerkClient.users.getUser(clerkId);
 
         user = await User.create({
           clerkId,
-
-          email: clerkUser.emailAddresses[0].emailAddress,
-
-          name:
-            `${clerkUser.firstName || ""} ${
-              clerkUser.lastName || ""
-            }`.trim(),
-
+          email: clerkUser.emailAddresses[0]?.emailAddress,
+          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
           image: clerkUser.imageUrl,
         });
 
         console.log("NEW USER CREATED:", user.email);
       }
 
-      // ATTACH USER TO REQUEST
       req.user = user;
-
       next();
     } catch (error) {
       console.error("Error in protectRoute middleware", error);
-
-      res.status(500).json({
+      return res.status(500).json({
         message: "Internal Server Error",
       });
     }
