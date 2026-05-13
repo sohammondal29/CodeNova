@@ -1,4 +1,4 @@
-# CodeNova
+# [CodeNova](https://codenova-soham.vercel.app/)
 
 CodeNova is a full-stack MERN-based coding interview and collaboration platform built for live problem solving, session management, and real-time interaction. It combines a polished React frontend with an Express/Node backend, MongoDB for persistence, Clerk for authentication, Stream for video/chat, and Socket.IO for live collaboration.
 
